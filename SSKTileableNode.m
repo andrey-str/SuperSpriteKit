@@ -20,6 +20,22 @@ static CGFloat SSKTileableNodeNoResizing = -9999;
                               texture:[SKTexture textureWithImageNamed:imageName]];
 }
 
++ (instancetype)tileableNodeWithSize:(CGSize)size texture:(SKTexture *)texture normalMap:(SKTexture*)normalMap{
+
+    if (!texture || !normalMap) {
+        return nil;
+    }
+
+    SSKTileableNode *node = [self node];
+    node.partNodes = [NSMutableArray new];
+    node.texture = texture;
+    node.normalMap = normalMap;
+    node.size = size;
+
+    return node;
+
+}
+
 + (instancetype)tileableNodeWithSize:(CGSize)size texture:(SKTexture *)texture
 {
     if (!texture) {
@@ -52,7 +68,7 @@ static CGFloat SSKTileableNodeNoResizing = -9999;
         tileSize.width = MIN(self.size.width - drawPoint.x, textureSize.width);
         tileSize.height = MIN(self.size.height - drawPoint.y, textureSize.height);
         
-        SKTexture *tileTexture;
+        SKTexture *tileTexture, *normalMapTexture;
         
         if (tileSize.width < textureSize.width || tileSize.height < textureSize.height) {
             CGRect textureRect = self.texture.textureRect;
@@ -60,11 +76,23 @@ static CGFloat SSKTileableNodeNoResizing = -9999;
             textureRect.size.height *= tileSize.height / textureSize.height;
             
             tileTexture = [SKTexture textureWithRect:textureRect inTexture:self.texture];
+
+            if(self.normalMap){
+                normalMapTexture = [SKTexture textureWithRect:textureRect inTexture:self.normalMap];
+            }
         } else {
             tileTexture = self.texture;
+            normalMapTexture = self.normalMap;
         }
-        
-        SKSpriteNode *tileNode = [SKSpriteNode spriteNodeWithTexture:tileTexture];
+
+        SKSpriteNode *tileNode = nil;
+        if(normalMapTexture) {
+            tileNode = [SKSpriteNode spriteNodeWithTexture:tileTexture normalMap:normalMapTexture];
+            tileNode.lightingBitMask = 1; // TODO: move to properties
+        }
+        else
+            tileNode = [SKSpriteNode spriteNodeWithTexture:tileTexture];
+
         tileNode.anchorPoint = CGPointZero;
         tileNode.position = drawPoint;
         tileNode.size = tileSize;

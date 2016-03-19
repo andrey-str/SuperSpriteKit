@@ -19,7 +19,7 @@
  *  @discussion Set this property to change the node's texture.
  *  Setting this property will redraw the node's tiled textures.
  */
-@property (nonatomic, strong) SKTexture *texture;
+@property (nonatomic, strong) SKTexture *texture, *normalMap;
 
 /**
  *  Color that the node is tinted with
@@ -58,6 +58,9 @@
 + (instancetype)tileableNodeWithSize:(CGSize)size
                              texture:(SKTexture *)texture;
 
++ (instancetype)tileableNodeWithSize:(CGSize)size
+                             texture:(SKTexture *)texture
+                           normalMap:(SKTexture*)normalMap;
 @end
 
 #pragma mark - SKActions

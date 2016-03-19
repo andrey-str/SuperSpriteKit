@@ -31,6 +31,7 @@ static NSString *SSKMultiLineLabelNodeGetStringForWord(NSString *word)
                                         fontSize:fontSize
                                        fontColor:[SKColor blackColor]
                                    numberOfLines:0
+                            lineHeightMultiplier:1
                                     maximumWidth:maximumWidth
                                             text:text];
 }
